@@ -1,16 +1,18 @@
-import * as cdk from 'aws-cdk-lib';
+import { Stack, StackProps, RemovalPolicy } from 'aws-cdk-lib';
+import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
 import { Construct } from 'constructs';
-// import * as sqs from 'aws-cdk-lib/aws-sqs';
 
-export class CdkSampleStack extends cdk.Stack {
-  constructor(scope: Construct, id: string, props?: cdk.StackProps) {
+
+export class CdkSampleStack extends Stack {
+  constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
     // The code that defines your stack goes here
-
-    // example resource
-    // const queue = new sqs.Queue(this, 'CdkSampleQueue', {
-    //   visibilityTimeout: cdk.Duration.seconds(300)
-    // });
+    new dynamodb.Table(this, 'MyTable', {
+      partitionKey: { name: 'id', type: dynamodb.AttributeType.STRING },
+      // It's good practice to set a removal policy for sample apps
+      removalPolicy: RemovalPolicy.DESTROY, // DESTROY will delete the table when the stack is deleted
+      // tableName: 'MySampleTable' // Optional: specify a table name
+    });
   }
 }
